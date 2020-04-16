@@ -11,6 +11,5 @@ public enum State {
 	OUVERT_PARTIELLE,
 	FERME_PARTIELLE,
 	ARRET,
-	INCONNU
-
+	INCONNU,
 }

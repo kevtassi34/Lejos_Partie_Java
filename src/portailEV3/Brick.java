@@ -1,8 +1,12 @@
 package portailEV3;
+import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
+
 import lejos.hardware.lcd.LCD;
 import lejos.hardware.port.MotorPort;
 import lejos.hardware.port.SensorPort;
 import lejos.utility.Delay;
+
 
 
 public class Brick{
@@ -20,16 +24,15 @@ public class Brick{
 	private static Door rightDoor = new Door(MotorPort.B);
 
 	private static State stateDoor;
+	private static ArrayList<State> stateList ;
 
 	
 	public static void main(String[] args) throws InterruptedException{
 		
 		stateDoor = State.valueOf("INCONNU");
 
-		
 		EcouteBT EBT = new EcouteBT();
 		
-	
 		initialisation();
 
 		EBT.start();
@@ -50,16 +53,23 @@ public class Brick{
 					//Ouvrir la porte
 				case 2: 
 					totalOpening();
-					break;	
+					break;	 
 					
 					//Fermer la porte
 				case 3 : 
 					totalClosing();
 					break;
+					
+				 default:
+					 TimeUnit.SECONDS.sleep(20);
+					 totalClosing();
+					 while(!doorSensorClosed.contact()) {
+						 
+					 }
+					   break;
 			}
 		}
 	}
-	
 	
 	@SuppressWarnings("unlikely-arg-type")
 	public static void initialisation() {
@@ -101,16 +111,19 @@ public class Brick{
 			rightDoor.stop(true);
 			leftDoor.stop(true);
 			stateDoor = State.valueOf("OUVERT");
+			saveState(stateDoor);
 		}
 		else if(stateDoor.name().equals("OUVERT")) {
 			System.out.println("En fermeture.");
 			totalClosing();
 			stateDoor = State.valueOf("FERME");
+			saveState(stateDoor);
 		}
 		else if(stateDoor.name().equals("OUVERT_PARTIELLE")) {
 			System.out.println("En fermeture.");
 			partialClosing();
 			stateDoor = State.valueOf("FERME");
+			saveState(stateDoor);
 		}
 		
 		else if(stateDoor.name().equals("EnOuvertureTotale")) {
@@ -118,6 +131,7 @@ public class Brick{
 			leftDoor.stop(true);
 			rightDoor.stop(true);
 			stateDoor = State.valueOf("ARRET");
+			saveState(stateDoor);
 		}
 		else if (stateDoor.name().equals("ARRET")) {
 			
@@ -127,6 +141,7 @@ public class Brick{
 				rightDoor.opened();
 				leftDoor.opened();
 				stateDoor = State.valueOf("EnOuvertureTotale");
+				saveState(stateDoor);
 				
 				// capteur de presence 
 				while(presenceSensor.presence()) {
@@ -137,6 +152,7 @@ public class Brick{
 			rightDoor.stop(true);
 			leftDoor.stop(true);
 			stateDoor = State.valueOf("OUVERT");
+			saveState(stateDoor);
 		}
 			
 	}
@@ -150,6 +166,7 @@ public class Brick{
 				System.out.println("En ouverture partielle.");
 				leftDoor.opened();
 				stateDoor = State.valueOf("EnOuverturePartielle");
+				saveState(stateDoor);
 				
 				// capteur de presence 
 				while(presenceSensor.presence()) {
@@ -158,22 +175,26 @@ public class Brick{
 			}
 			leftDoor.stop(true);
 			stateDoor = State.valueOf("OUVERT_PARTIELLE");
+			saveState(stateDoor);
 		}
 		else if (stateDoor.name().equals("OUVERT_PARTIELLE")) {
 			System.out.println("En fermeture.");
 			partialClosing();
 			stateDoor = State.valueOf("FERME");
+			saveState(stateDoor);
 		}
 		else if (stateDoor.name().equals("OUVERT")) {
 			System.out.println("En fermeture.");
 			totalClosing();
 			stateDoor = State.valueOf("FERME");
+			saveState(stateDoor);
 		}
 		
 		else if(stateDoor.name().equals("EnOuverturePartielle")) {
 			System.out.println("En Pause.");
 			leftDoor.stop(true);
 			stateDoor = State.valueOf("ARRET");
+			saveState(stateDoor);
 		}
 		else if (stateDoor.name().equals("ARRET")) {
 			
@@ -182,6 +203,7 @@ public class Brick{
 				System.out.println("En ouverture partielle.");
 				leftDoor.opened();
 				stateDoor = State.valueOf("EnOuverturePartielle");
+				saveState(stateDoor);
 				
 				// capteur de presence 
 				while(presenceSensor.presence()) {
@@ -190,6 +212,7 @@ public class Brick{
 			}
 			leftDoor.stop(true);
 			stateDoor = State.valueOf("OUVERT_PARTIELLE");
+			saveState(stateDoor);
 		}
 		
 	}
@@ -234,6 +257,7 @@ public class Brick{
 			leftDoor.closed();
 			rightDoor.closed();
 			stateDoor = State.valueOf("EnFermetureTotale");
+			saveState(stateDoor);
 			
 			// capteur de presence 
 			while(presenceSensor.presence()) {
@@ -241,25 +265,29 @@ public class Brick{
 				 rightDoor.stop(true);    
 		        }
 		}
-		rightDoor.stop(true);
+		rightDoor.stop(true);	
 		leftDoor.stop(true);
 		stateDoor = State.valueOf("FERME");
+		saveState(stateDoor);
 	}
 	else if (stateDoor.name().equals("FERME")) {
 		System.out.println("En Ouverture.");
 		totalOpening();
 		stateDoor = State.valueOf("OUVERT");
+		saveState(stateDoor);
 	}
 	else if(stateDoor.name().equals("FERME_PARTIELLE")) {
 		System.out.println("En Ouverture.");
 		partialOpening();
 		stateDoor = State.valueOf("OUVERT");
+		saveState(stateDoor);
 	}
 	else if(stateDoor.name().equals("EnFermetureTotale")) {
 		System.out.println("En Pause.");
 		leftDoor.stop(true);
 		rightDoor.stop(true);
 		stateDoor = State.valueOf("ARRET");
+		saveState(stateDoor);
 	}
 	else if (stateDoor.name().equals("ARRET")) {
 		
@@ -269,6 +297,7 @@ public class Brick{
 			rightDoor.opened();
 			leftDoor.opened();
 			stateDoor = State.valueOf("EnFermetureTotale");
+			saveState(stateDoor);
 			
 			// capteur de presence 
 			while(presenceSensor.presence()) {
@@ -279,7 +308,64 @@ public class Brick{
 		rightDoor.stop(true);
 		leftDoor.stop(true);
 		stateDoor = State.valueOf("FERME");
+		saveState(stateDoor);
 	}
   }
+	
+	
+	public static void saveState(State st) {
+		stateList.add(st);
+	}
 
+	public void displayStateList() {
+		for (int i =0 ; i<stateList.size();i++) {
+		
+			switch(stateList.get(i)){
+			
+			case EnOuvertureTotale:
+				System.out.println("porte en Ouverture Totale");
+				break;
+
+			case EnOuverturePartielle: 
+				System.out.println("porte en Ouverture Partielle");
+				break;	 
+				
+			case EnFermetureTotale : 
+				System.out.println("porte en Fermeture Totale");
+				break;
+				
+			case EnFermeturePartielle : 
+				System.out.println("porte en Fermeture Partielle");
+				break;
+				
+			case FERME : 
+				System.out.println("porte Fermée");
+				break;
+				
+			case OUVERT : 
+				System.out.println("porte Ouverte");
+				break;
+				
+			case OUVERT_PARTIELLE : 
+				System.out.println("porte Ouvert Partielle");
+				break;
+				
+			case FERME_PARTIELLE : 
+				System.out.println("porte en Fermé Partielle");
+				break;
+				
+			case ARRET : 
+				System.out.println("porte en Arrêt");
+				break;
+				
+			case INCONNU : 
+				System.out.println("Porte en Etat Inconnu");
+				break;
+				
+			 default:
+				   break;
+		  }
+			
+		}
+	}
 }

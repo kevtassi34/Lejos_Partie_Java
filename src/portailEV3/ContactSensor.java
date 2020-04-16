@@ -7,7 +7,7 @@ public class ContactSensor {
 
 	EV3TouchSensor contactSensor;
 
-	ContactSensor(Port port) {
+	public ContactSensor(Port port) {
 		this.contactSensor = new EV3TouchSensor(port);
 	}
 

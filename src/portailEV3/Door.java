@@ -7,7 +7,7 @@ public class Door {
 	Motor motor;
 	Boolean open, close, opening, closing, stopping;
 
-	Door(Port port) {
+	public Door(Port port) {
 		motor = new Motor(port);
 		open = close = opening = closing = stopping = false;
 	}
