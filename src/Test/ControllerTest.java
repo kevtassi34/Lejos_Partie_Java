@@ -7,18 +7,18 @@ import org.junit.Test;
 
 import exceptions.NoBrickFound;
 import lejos.hardware.port.SensorPort;
-import portailEV3.Brick;
 import portailEV3.ContactSensor;
+import portailEV3.Controller;
 import portailEV3.Door;
 import portailEV3.State;
 
-public class BrickTest {
+public class ControllerTest {
 
 	
-	/*@Test
+	/*@Test (expected = NoBrickFound.class)
 	public void testInitialisation() {
 		
-	//Brick initi = new Brick();
+	//Controller initi = new Controller();
 		
 		ContactSensor doorSensorClosed = new ContactSensor(SensorPort.S3);
 		State etat = State.FERME;
@@ -30,12 +30,19 @@ public class BrickTest {
 		fail("Not yet implemented");
 	} */
 	
-	@Test (expected = NoBrickFound.class)
+	@Test 
 	public void testTotalOpening() {
-		Brick brique = new Brick();
-		State stateDoor = State.valueOf("FERME");
+		Controller brique = new Controller();
+		State stateDoor = State.FERME;
+		State stateTest = State.OUVERT;
+		
 		brique.totalOpening();
-		assertEquals("OUVERT", stateDoor == State.valueOf("OUVERT"));
+		assertEquals(stateTest, stateDoor );
+		
+		State stateDoor1 = State.OUVERT;
+		State stateTest1 = State.FERME;
+		brique.totalOpening();
+		assertEquals(stateTest1, stateDoor1 );
 	}
 
 	/*@Test

@@ -9,7 +9,7 @@ import lejos.utility.Delay;
 
 
 
-public class Brick{
+public class Controller{
 
 	private static int remoteControlCode = 0;
 	private static boolean app_alive;
@@ -94,7 +94,7 @@ public class Brick{
 	public static void totalOpening() {
 	
 		if (stateDoor.name().equals("FERME")) {
-			
+								
 			//capteur de contact ouvert
 			while(!leftSensorOpen.contact()) {
 				System.out.println("En ouverture totale.");
@@ -272,7 +272,7 @@ public class Brick{
 	}
 	else if (stateDoor.name().equals("FERME")) {
 		System.out.println("En Ouverture.");
-		totalOpening();
+		//totalOpening();
 		stateDoor = State.valueOf("OUVERT");
 		saveState(stateDoor);
 	}

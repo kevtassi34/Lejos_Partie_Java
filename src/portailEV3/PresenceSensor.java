@@ -21,10 +21,10 @@ public class PresenceSensor {
 
 		float etat = sample[0];
 		
-		if (etat < 0.5)
-			return true;
-		else
-			return false;
+		// la fonction retourne un booléen. Il renvoie vrai si état est < 0.5, faux sinon
+		
+	return etat < 0.5;
 
 	}
 }
+

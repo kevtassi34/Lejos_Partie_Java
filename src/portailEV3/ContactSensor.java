@@ -18,7 +18,7 @@ public class ContactSensor {
 
 		float etat = sample[0];
 		
-		// (État==1) c'est un booléen Il renvoie vrai si état vaut 1, faux sinon
+		// la fonction retourne un booléen. Il renvoie vrai si état vaut 1, faux sinon
 		return etat == 1;
 
 	}

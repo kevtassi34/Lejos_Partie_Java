@@ -15,7 +15,7 @@ public class Door {
 	public Boolean getOpening() {
 		return opening;
 	}
-
+	
 	public void setOpening(Boolean opening) {
 		this.opening = opening;
 	}
@@ -29,11 +29,9 @@ public class Door {
 	}
 
 	void opened() {
-
 		this.motor.push();
 		this.opening = true;
 		this.stopping = false;
-
 	}
 	
 	void stop(boolean open) {
